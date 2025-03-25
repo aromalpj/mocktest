@@ -4,7 +4,7 @@
  * @brief This file contains all basic communication and device setup for the ADS1115 device family.
  * @warning This software utilizes TI Drivers
  *
- * @copyright Copyright (C) 2021 Texas Instruments Incorporated - http://www.ti.com/
+ * @copyright Copyright (C) 2025 Texas Instruments Incorporated - http://www.ti.com/
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
