@@ -135,3 +135,33 @@ uint16_t readSingleRegister(uint8_t address)
     registerMap[address] = regValue;
     return regValue;
 }
+
+/**
+ *
+ * @brief readSingleRegister()
+ * Reads the contents of a single register at the specified address.
+ *
+ * @param[in] address Is the 8-bit address of the register to read.
+ *
+ * @return The 16-bit register read result as an unsigned value, but conversion
+ * is binary 2's complement.
+ */
+uint16_t readSingleRegister(uint8_t address)
+{
+    //
+    // Check that the register address is in range
+    //
+    assert(address <= MAX_REGISTER_ADDRESS);
+    uint16_t regValue = 0;
+    uint8_t regRXdata[4] = {0};
+    int8_t retStatus;
+    retStatus = receiveI2CData(address, regRXdata, 2);
+    if(retStatus != false)
+    {
+        /* I2C communication error took place...Insert a handling routine here */
+        return 0;
+    }
+    regValue =  combineBytes(regRXdata[0], regRXdata[1]);
+    registerMap[address] = regValue;
+    return regValue;
+}
