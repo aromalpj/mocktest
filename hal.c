@@ -232,3 +232,81 @@ void GPIO_ALERT_IRQHandler(uint_least8_t index)
     /* Interrupt action: Set a flag */
     flag_nALERT_INTERRUPT = true;
 }
+//****************************************************************************
+//
+// GPIO helper functions
+//
+//****************************************************************************
+/**
+ *
+ * @brief waitForALERTinterrupt()
+ * Waits for the ALERT/RDY interrupt or until the specified timeout occurs.
+ *
+ * @param[in] timeout_ms Number of milliseconds to wait before timeout event.
+ *
+ * @return Returns 'true' if ALERT/RDY interrupt occurred before the timeout.
+ */
+bool waitForALERTinterrupt(const uint32_t timeout_ms)
+{
+    /* --- INSERT YOUR CODE HERE ---
+     *
+     * Poll the ALERT/RDY GPIO pin until it goes low. To avoid potential infinite
+     * loops, you may also want to implement a timer interrupt to occur after
+     * the specified timeout period, in case the ALERT/RDY pin is not active.
+     * Return a boolean to indicate if ALERT/RDY went low or if a timeout occurred.
+     */
+
+    /* The following code is based on a TI Drivers implementation */
+
+    // Convert ms to a # of loop iterations, OR even better use a timer here...
+    uint32_t timeout = timeout_ms * 6000;   // convert to # of loop iterations
+
+    // Reset interrupt flag
+    flag_nALERT_INTERRUPT = false;
+
+    // Enable interrupts
+    GPIO_clearInt(ALERT_CONST);
+    delay_us(1);
+    GPIO_enableInt(ALERT_CONST);
+
+    // Wait for nDRDY interrupt or timeout - each iteration is about 20 ticks
+    do {
+        timeout--;
+    } while (!flag_nALERT_INTERRUPT && (timeout > 0));
+
+    GPIO_disableInt(ALERT_CONST);
+
+    // Reset interrupt flag
+    flag_nALERT_INTERRUPT = false;
+
+    // Timeout counter greater than zero indicates that an interrupt occurred
+    return (timeout > 0);
+}
+/**
+ *
+ * @brief InitI2C()
+ * Configures the MCU's I2C peripheral, for interfacing with target devices.
+ *
+ * @return none
+ */
+void InitI2C(void)
+{
+    /* --- INSERT YOUR CODE HERE --- */
+
+    //
+    // Enabling I2C2 peripheral.
+    //
+
+    //
+    // Configuring the pin muxing for I2C2 functions.
+    //
+
+    //
+    // Enabling and initializing the I2C2 master module.
+    //
+
+    /* The following code is based on a TI Drivers implementation */
+
+    /* Call driver init functions */
+    I2C_init();
+}
