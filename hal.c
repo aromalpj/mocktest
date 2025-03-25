@@ -310,3 +310,66 @@ void InitI2C(void)
     /* Call driver init functions */
     I2C_init();
 }
+
+
+/**
+ *
+ * @brief sendI2CData()
+ * Configures the MCU's I2C peripheral, for interfacing with target devices.
+ *
+ * @param[in] address Of target device.
+ * @param[in] arrayIndex Is pointer to an array of data to be transmitted.
+ * @param[in] length Of the data array.
+ *
+ * @return 0 is communication success; < 0 is communication failure.
+ */
+int8_t sendI2CData(uint8_t address, uint8_t *arrayIndex, uint8_t length)
+{
+    /* --- INSERT YOUR CODE HERE --- */
+
+    /* The following code is based on a TI Drivers implementation */
+    int8_t retStatus = 0;
+    uint8_t wData[256];
+    uint8_t rData[1];
+    wData[0] = address;
+    uint16_t i;
+    // Copy the data array
+    for(i = 1; i < (length + 1); i++)
+    {
+        wData[i] = arrayIndex[i-1];
+    }
+    //
+    // Initialize the optional I2C bus parameters
+    //
+    I2C_Params params;
+    I2C_Params_init(&params);
+    params.bitRate = I2C_400kHz;
+    //
+    // Open the I2C bus for usage
+    //
+    I2C_Handle i2cHandle = I2C_open(I2Cbus, &params);
+    //
+    // Initialize the slave address for transactions
+    //
+    I2C_Transaction transaction = {0};
+    transaction.slaveAddress = ADS1115_ADDRESS;
+    transaction.readBuf = rData;
+    transaction.readCount = 0;
+    transaction.writeBuf = wData;
+    transaction.writeCount = length + 1;
+    retStatus = I2C_transfer(i2cHandle, &transaction);
+
+    //
+    // Return error, if read failed
+    //
+    if (retStatus == false)
+    {
+        /* Send error response here then close the port */
+        I2C_close(i2cHandle);
+        return -1;
+    }
+
+    I2C_close(i2cHandle);
+
+    return 0;
+}
