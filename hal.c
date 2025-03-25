@@ -150,3 +150,85 @@ void delay_ms(const uint32_t delay_time_ms)
     delayTime = delayTime * delay_time_ms;
     MAP_SysCtlDelay( delayTime );
 }
+/**
+ *
+ * @brief delay_us()
+ * Provides a timing delay with 'us' resolution.
+ *
+ * @param[in] delay_time_us Is the number of microseconds to delay.
+ *
+ * @return none
+ */
+//
+void delay_us(const uint32_t delay_time_us)
+{
+    /* --- INSERT YOUR CODE HERE --- */
+
+    const uint32_t cycles_per_loop = 3;
+    uint32_t delayTime = getSysClockHz() / (cycles_per_loop * 1000000u);
+    delayTime = delayTime * delay_time_us;
+    MAP_SysCtlDelay( delayTime );
+}
+
+//****************************************************************************
+//
+// GPIO initialization
+//
+//****************************************************************************
+
+/**
+ *
+ * @brief InitGPIO()
+ * Configures the MCU's GPIO pins that interface with the ADC.
+ *
+ * @return none
+ *
+ */
+void InitGPIO(void)
+{
+    /* --- INSERT YOUR CODE HERE --- */
+    // NOTE: Not all hardware implementations may control each of these pins...
+
+    /* The following code is based on a TI Drivers implementation */
+
+    /* Call driver init functions */
+    GPIO_init();
+
+    /* Set the interrupt callback function */
+    GPIO_setCallback(ALERT_CONST,GPIO_ALERT_IRQHandler );
+
+}
+//*****************************************************************************
+//
+// Interrupt handler for ALERT/RDY GPIO
+//
+//*****************************************************************************
+
+/**
+ *
+ * @brief GPIO_ALERT_IRQHandler()
+ * Interrupt handler for ALERT/RDY falling edge interrupt.
+ *
+ * @param[in] index Position of the interrupt for callback.
+ *
+ * @return none
+ */
+void GPIO_ALERT_IRQHandler(uint_least8_t index)
+{
+    /* --- INSERT YOUR CODE HERE --- */
+
+    /* NOTE: You many need to rename or
+     * register this interrupt function for your processor.
+     *  - Possible ways to handle this interrupt:
+     *  1. If you decide to read data here, you may want to
+     *      disable other interrupts to avoid partial data reads.
+     *  2. Set a flag to read during a polling loop
+     *
+     *  In this example we set a flag and exit the interrupt routine.
+     *  In the main program loop, your application can examine
+     *  all state flags and decide which state (operation) to perform next.
+     */
+
+    /* Interrupt action: Set a flag */
+    flag_nALERT_INTERRUPT = true;
+}
