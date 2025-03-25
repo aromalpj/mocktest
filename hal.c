@@ -294,8 +294,8 @@ void InitI2C(void)
     /* --- INSERT YOUR CODE HERE --- */
 
     //
-    // Enabling I2C2 peripheral.
-    //
+    // Enabling I2C2 peripheral input devices.
+    // mockfunction();
 
     //
     // Configuring the pin muxing for I2C2 functions.
