@@ -150,3 +150,31 @@ void delay_ms(const uint32_t delay_time_ms)
     delayTime = delayTime * delay_time_ms;
     MAP_SysCtlDelay( delayTime );
 }
+/**
+ *
+ * @brief InitI2C()
+ * Configures the MCU's I2C peripheral, for interfacing with target devices.
+ *
+ * @return none
+ */
+void InitI2C(void)
+{
+    /* --- INSERT YOUR CODE HERE --- */
+
+    //
+    // Enabling I2C2 peripheral devices.
+    // testfunction();
+
+    //
+    // Configuring the pin muxing for I2C2 functions.
+    //
+
+    //
+    // Enabling and initializing the I2C2 master module.
+    //
+
+    /* The following code is based on a TI Drivers implementation */
+
+    /* Call driver init functions */
+    I2C_init();
+}
